@@ -52,17 +52,19 @@ const App = () => {
     }
   };
 
-  useEffect(() => checkIfWalletIsConnected(), []);
+  useEffect(() => {
+    checkIfWalletIsConnected();
+  }, []);
 
   return (
     <>
       <h1>Hello, {currentAccount}</h1>
       <br />
-      !currentAccount && (
-      <button className="waveButton" onClick={connectWallet}>
-        Connect Wallet
-      </button>
-      )
+      {!currentAccount && (
+        <button className="waveButton" onClick={connectWallet}>
+          Connect Wallet
+        </button>
+      )}
     </>
   );
 };
