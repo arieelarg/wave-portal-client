@@ -1,18 +1,47 @@
 import React from "react";
-import "./App.css";
 import { ethers } from "ethers";
 import abi from "./utils/WavePortal.json";
 
 const ACCOUNTS = "eth_accounts";
 const REQUEST_ACCOUNTS = "eth_requestAccounts";
 
-const App = () => {
+function App() {
   const { ethereum } = window || {};
   const contractAddress = process.env.CONTRACT_ADDRESS;
   const contractABI = abi.abi;
 
   const [currentAccount, setCurrentAccount] = React.useState("");
   const [allWaves, setAllWaves] = React.useState([]);
+
+  const getAllWaves = async () => {
+    try {
+      if (!ethereum) return;
+
+      const provider = new ethers.providers.Web3Provider(ethereum);
+      const signer = provider.getSigner();
+      const wavePortalContract = new ethers.Contract(
+        contractAddress,
+        contractABI,
+        signer
+      );
+
+      const waves = await wavePortalContract.getAllWaves();
+
+      const wavesCleaned = [];
+
+      waves.forEach((waveData) => {
+        wavesCleaned.push({
+          address: waveData.waver,
+          timestamp: new Date(waveData.timestamp * 1000),
+          message: waveData.message,
+        });
+      });
+
+      setAllWaves(wavesCleaned);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const checkIfWalletIsConnected = async () => {
     try {
@@ -81,36 +110,6 @@ const App = () => {
     }
   };
 
-  const getAllWaves = async () => {
-    try {
-      if (!ethereum) return;
-
-      const provider = new ethers.providers.Web3Provider(ethereum);
-      const signer = provider.getSigner();
-      const wavePortalContract = new ethers.Contract(
-        contractAddress,
-        contractABI,
-        signer
-      );
-
-      const waves = await wavePortalContract.getAllWaves();
-
-      let wavesCleaned = [];
-
-      waves.forEach((wave) => {
-        wavesCleaned.push({
-          address: wave.waver,
-          timestamp: new Date(wave.timestamp * 1000),
-          message: wave.message,
-        });
-      });
-
-      setAllWaves(wavesCleaned);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   React.useEffect(() => {
     checkIfWalletIsConnected();
   }, []);
@@ -120,32 +119,32 @@ const App = () => {
       <h1>Hello, {currentAccount}</h1>
       <br />
       {!currentAccount ? (
-        <button className="button" onClick={connectWallet}>
+        <button className="button" onClick={connectWallet} type="button">
           Connect to Wallet
         </button>
       ) : (
-        <button className="waveButton" onClick={wave}>
+        <button className="waveButton" onClick={wave} type="button">
           Wave at Me
         </button>
       )}
-      {allWaves.map((wave, index) => {
+      {allWaves.map((waveData) => {
         return (
           <div
-            key={wave.address.toString()}
+            key={waveData.address.toString()}
             style={{
               backgroundColor: "OldLace",
               marginTop: "16px",
               padding: "8px",
             }}
           >
-            <div>Address: {wave.address}</div>
-            <div>Time: {wave.timestamp.toString()}</div>
-            <div>Message: {wave.message}</div>
+            <div>Address: {waveData.address}</div>
+            <div>Time: {waveData.timestamp.toString()}</div>
+            <div>Message: {waveData.message}</div>
           </div>
         );
       })}
     </>
   );
-};
+}
 
 export default App;

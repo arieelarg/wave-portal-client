@@ -1,0 +1,49 @@
+const path = require("path");
+const webpack = require("webpack");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+
+require("dotenv").config({ path: "./.env" });
+
+module.exports = ({ mode } = { mode: "production" }) => {
+  console.log(`mode is: ${mode}`);
+
+  return {
+    mode,
+    entry: "./src/index.js",
+    devServer: {
+      hot: false,
+      open: true,
+    },
+    output: {
+      publicPath: "/",
+      path: path.resolve(__dirname, "build"),
+      filename: "bundle.js",
+    },
+    module: {
+      rules: [
+        {
+          test: /\.(js|jsx)$/,
+          loader: "babel-loader",
+          exclude: /node_modules/,
+        },
+        {
+          test: /\.css$/,
+          use: [{ loader: "style-loader" }, { loader: "css-loader" }],
+        },
+        {
+          test: /\.(png|svg|jpg|jpeg|gif|ico)$/,
+          exclude: /node_modules/,
+          use: ["file-loader?name=[name].[ext]"], // ?name=[name].[ext] is only necessary to preserve the original file name
+        },
+      ],
+    },
+    plugins: [
+      new HtmlWebpackPlugin({
+        template: "./public/index.html",
+      }),
+      new webpack.DefinePlugin({
+        "process.env": JSON.stringify(process.env),
+      }),
+    ],
+  };
+};
