@@ -1,4 +1,5 @@
 import React from "react";
+import "./App.css";
 import { ethers } from "ethers";
 import abi from "./utils/WavePortal.json";
 
@@ -7,7 +8,7 @@ const REQUEST_ACCOUNTS = "eth_requestAccounts";
 
 const App = () => {
   const { ethereum } = window || {};
-  const contractAddress = "0xd6f42a11b4e387E2092A065BD9154459e38B1d59";
+  const contractAddress = process.env.CONTRACT_ADDRESS;
   const contractABI = abi.abi;
 
   const [currentAccount, setCurrentAccount] = React.useState("");
@@ -93,8 +94,6 @@ const App = () => {
       );
 
       const waves = await wavePortalContract.getAllWaves();
-
-      console.log("waves: ", waves);
 
       let wavesCleaned = [];
 
