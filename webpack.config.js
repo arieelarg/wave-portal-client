@@ -4,11 +4,8 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 require("dotenv").config({ path: "./.env" });
 
-module.exports = ({ mode } = { mode: "production" }) => {
-  console.log(`mode is: ${mode}`);
-
+module.exports = () => {
   return {
-    mode,
     entry: "./src/index.js",
     devServer: {
       hot: false,
