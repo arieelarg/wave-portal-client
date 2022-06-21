@@ -18,7 +18,7 @@
     "clean": "rimraf ./build",
     "webpack": "webpack-dev-server",
     "dev": "webpack -- --config webpack.config.js",
-    "start": "webpack"
+    "start": "react-scripts start"
   },
   "eslintConfig": {
     "extends": [
