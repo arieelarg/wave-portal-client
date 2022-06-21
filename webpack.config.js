@@ -25,6 +25,14 @@ module.exports = () => {
           exclude: /node_modules/,
         },
         {
+          test: /\.html$/,
+          use: [
+            {
+              loader: "html-loader",
+            },
+          ],
+        },
+        {
           test: /\.css$/,
           use: [{ loader: "style-loader" }, { loader: "css-loader" }],
         },
@@ -38,6 +46,7 @@ module.exports = () => {
     plugins: [
       new HtmlWebpackPlugin({
         template: "./public/index.html",
+        filename: "./index.html",
       }),
       new webpack.DefinePlugin({
         "process.env": JSON.stringify(process.env),
