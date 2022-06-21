@@ -6,10 +6,11 @@ require("dotenv").config({ path: "./.env" });
 
 module.exports = () => {
   return {
+    mode: "development",
     entry: "./src/index.js",
     devServer: {
-      hot: false,
-      open: true,
+      hot: true,
+      open: false,
     },
     output: {
       publicPath: "/",
