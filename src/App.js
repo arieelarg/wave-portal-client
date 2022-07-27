@@ -1,5 +1,3 @@
-/* eslint-disable no-nested-ternary */
-/* eslint-disable react/prop-types */
 import React from "react";
 import { ethers } from "ethers";
 import Button from "react-bootstrap/Button";
@@ -10,7 +8,7 @@ import abi from "./utils/WavePortal.json";
 
 const ACCOUNTS = "eth_accounts";
 const REQUEST_ACCOUNTS = "eth_requestAccounts";
-const { CONTRACT_ADDRESS } = process.env;
+const CONTRACT_ADDRESS = "0xD5172b9405fFAACBf1F5456cc3dC38164f0E01D3";
 
 function FormInput({ onInput, message, wave }) {
   return (
@@ -59,7 +57,6 @@ function App() {
   const [message, setMessage] = React.useState();
   const [loading, setLoading] = React.useState(false);
 
-  // eslint-disable-next-line no-shadow
   const onInput = ({ target: { value } }) => setMessage(value);
 
   const getAllWaves = async () => {
@@ -124,7 +121,7 @@ function App() {
     };
   }, []);
 
-  const checkIfWalletIsConnected = async () => {
+  const isWalletConnected = async () => {
     try {
       if (!ethereum) return;
 
@@ -197,7 +194,7 @@ function App() {
   };
 
   React.useEffect(() => {
-    checkIfWalletIsConnected();
+    isWalletConnected();
   }, []);
 
   return (
@@ -222,12 +219,12 @@ function App() {
         <FormInput onInput={onInput} message={message} wave={wave} />
       )}
 
-      {allWaves.map((waveData) => {
+      {allWaves.map(({ timestamp, address, message }) => {
         return (
-          <Card key={waveData.timestamp.toString()} className="p-2 mt-2">
-            <div>Address: {waveData.address}</div>
-            <div>Time: {waveData.timestamp.toString()}</div>
-            <div>Message: {waveData.message}</div>
+          <Card key={timestamp.toString()} className="p-2 mt-2">
+            <div>Address: {address}</div>
+            <div>Time: {timestamp.toString()}</div>
+            <div>Message: {message}</div>
           </Card>
         );
       })}
